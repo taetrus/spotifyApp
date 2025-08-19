@@ -199,6 +199,7 @@ const App: React.FC = () => {
         }}
       >
         <section>
+
           <p>Spotify Status: {spotifyToken ? 'Connected' : 'Disconnected'}</p>
           {!spotifyToken && (
             <button style={buttonStyle} onClick={loginSpotify}>Connect Spotify</button>
@@ -266,6 +267,7 @@ const App: React.FC = () => {
         </section>
 
         <section>
+
           <p>YouTube Status: {youtubeToken ? 'Connected' : 'Disconnected'}</p>
           {!youtubeToken && (
             <button style={buttonStyle} onClick={loginYoutube}>Connect YouTube</button>
@@ -331,6 +333,7 @@ const App: React.FC = () => {
             </table>
           </div>
         </section>
+
       </div>
     </div>
   )
