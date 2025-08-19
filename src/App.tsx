@@ -192,111 +192,137 @@ const App: React.FC = () => {
       <h1 style={{ textAlign: 'center' }}>Spotify ↔ YouTube Music</h1>
       <div style={{ display: 'flex', gap: '2rem', justifyContent: 'space-around' }}>
         <div style={{ flex: 1 }}>
+          <p>Spotify Status: {spotifyToken ? 'Connected' : 'Disconnected'}</p>
           {!spotifyToken && (
             <button style={buttonStyle} onClick={loginSpotify}>Connect Spotify</button>
           )}
-          {spotifyToken && (
-            <>
-              <button style={buttonStyle} onClick={fetchSpotifyPlaylists}>Load Spotify Playlists</button>
-              <ul style={listStyle}>
-                {spotifyPlaylists.map((pl) => (
-                  <li key={pl.id} style={listItemStyle} onClick={() => fetchSpotifyTracks(pl)}>
-                    {pl.name}
-                  </li>
+          <button
+            style={buttonStyle}
+            onClick={fetchSpotifyPlaylists}
+            disabled={!spotifyToken}
+          >
+            Load Spotify Playlists
+          </button>
+          <ul style={listStyle}>
+            {spotifyPlaylists.map((pl) => (
+              <li
+                key={pl.id}
+                style={{
+                  ...listItemStyle,
+                  fontWeight: selectedSpotifyPlaylist?.id === pl.id ? 'bold' : 'normal'
+                }}
+                onClick={() => fetchSpotifyTracks(pl)}
+              >
+                {pl.name}
+              </li>
+            ))}
+          </ul>
+          <p>Selected Playlist: {selectedSpotifyPlaylist?.name || 'None'}</p>
+          <div>
+            <h3>Tracks</h3>
+            <table style={tableStyle}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Track Name</th>
+                  <th style={thStyle}>Album Name</th>
+                  <th style={thStyle}>Artist Name</th>
+                  <th style={thStyle}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {spotifyTracks.map((t) => (
+                  <tr key={t.id}>
+                    <td style={tdStyle}>{t.name}</td>
+                    <td style={tdStyle}>{t.album}</td>
+                    <td style={tdStyle}>{t.artists?.join(', ')}</td>
+                    <td style={tdStyle}>
+                      <button
+                        style={buttonStyle}
+                        onClick={() => transferSpotifyTrackToYoutube(t)}
+                        disabled={!youtubeToken || !selectedYoutubePlaylist}
+                      >
+                        To YouTube
+                      </button>
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-              {spotifyTracks.length > 0 && (
-                <div>
-                  <h3>Songs in {selectedSpotifyPlaylist?.name}</h3>
-                  <table style={tableStyle}>
-                    <thead>
-                      <tr>
-                        <th style={thStyle}>Track Name</th>
-                        <th style={thStyle}>Album Name</th>
-                        <th style={thStyle}>Artist Name</th>
-                        {youtubeToken && selectedYoutubePlaylist && (
-                          <th style={thStyle}>Actions</th>
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {spotifyTracks.map((t) => (
-                        <tr key={t.id}>
-                          <td style={tdStyle}>{t.name}</td>
-                          <td style={tdStyle}>{t.album}</td>
-                          <td style={tdStyle}>{t.artists?.join(', ')}</td>
-                          {youtubeToken && selectedYoutubePlaylist && (
-                            <td style={tdStyle}>
-                              <button
-                                style={buttonStyle}
-                                onClick={() => transferSpotifyTrackToYoutube(t)}
-                              >
-                                To YouTube
-                              </button>
-                            </td>
-                          )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </>
-          )}
+                {spotifyTracks.length === 0 && (
+                  <tr>
+                    <td style={tdStyle} colSpan={4}>
+                      {selectedSpotifyPlaylist ? 'No tracks found' : 'Select a playlist'}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div style={{ flex: 1 }}>
+          <p>YouTube Status: {youtubeToken ? 'Connected' : 'Disconnected'}</p>
           {!youtubeToken && (
             <button style={buttonStyle} onClick={loginYoutube}>Connect YouTube</button>
           )}
-          {youtubeToken && (
-            <>
-              <button style={buttonStyle} onClick={fetchYoutubePlaylists}>Load YouTube Playlists</button>
-              <ul style={listStyle}>
-                {youtubePlaylists.map((pl) => (
-                  <li key={pl.id} style={listItemStyle} onClick={() => fetchYoutubeTracks(pl)}>
-                    {pl.name}
-                  </li>
+          <button
+            style={buttonStyle}
+            onClick={fetchYoutubePlaylists}
+            disabled={!youtubeToken}
+          >
+            Load YouTube Playlists
+          </button>
+          <ul style={listStyle}>
+            {youtubePlaylists.map((pl) => (
+              <li
+                key={pl.id}
+                style={{
+                  ...listItemStyle,
+                  fontWeight: selectedYoutubePlaylist?.id === pl.id ? 'bold' : 'normal'
+                }}
+                onClick={() => fetchYoutubeTracks(pl)}
+              >
+                {pl.name}
+              </li>
+            ))}
+          </ul>
+          <p>Selected Playlist: {selectedYoutubePlaylist?.name || 'None'}</p>
+          <div>
+            <h3>Tracks</h3>
+            <table style={tableStyle}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Track Name</th>
+                  <th style={thStyle}>Album Name</th>
+                  <th style={thStyle}>Artist Name</th>
+                  <th style={thStyle}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {youtubeTracks.map((t) => (
+                  <tr key={t.id}>
+                    <td style={tdStyle}>{t.name}</td>
+                    <td style={tdStyle}>{t.album}</td>
+                    <td style={tdStyle}>{t.artists?.join(', ')}</td>
+                    <td style={tdStyle}>
+                      <button
+                        style={buttonStyle}
+                        onClick={() => transferYoutubeTrackToSpotify(t)}
+                        disabled={!spotifyToken || !selectedSpotifyPlaylist}
+                      >
+                        To Spotify
+                      </button>
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-              {youtubeTracks.length > 0 && (
-                <div>
-                  <h3>Songs in {selectedYoutubePlaylist?.name}</h3>
-                  <table style={tableStyle}>
-                    <thead>
-                      <tr>
-                        <th style={thStyle}>Track Name</th>
-                        <th style={thStyle}>Album Name</th>
-                        <th style={thStyle}>Artist Name</th>
-                        {spotifyToken && selectedSpotifyPlaylist && (
-                          <th style={thStyle}>Actions</th>
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {youtubeTracks.map((t) => (
-                        <tr key={t.id}>
-                          <td style={tdStyle}>{t.name}</td>
-                          <td style={tdStyle}>{t.album}</td>
-                          <td style={tdStyle}>{t.artists?.join(', ')}</td>
-                          {spotifyToken && selectedSpotifyPlaylist && (
-                            <td style={tdStyle}>
-                              <button
-                                style={buttonStyle}
-                                onClick={() => transferYoutubeTrackToSpotify(t)}
-                              >
-                                To Spotify
-                              </button>
-                            </td>
-                          )}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </>
-          )}
+                {youtubeTracks.length === 0 && (
+                  <tr>
+                    <td style={tdStyle} colSpan={4}>
+                      {selectedYoutubePlaylist ? 'No tracks found' : 'Select a playlist'}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
