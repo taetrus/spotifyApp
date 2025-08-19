@@ -190,8 +190,16 @@ const App: React.FC = () => {
   return (
     <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
       <h1 style={{ textAlign: 'center' }}>Spotify ↔ YouTube Music</h1>
-      <div style={{ display: 'flex', gap: '2rem', justifyContent: 'space-around' }}>
-        <div style={{ flex: 1 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '2rem',
+          alignItems: 'flex-start'
+        }}
+      >
+        <section>
+
           <p>Spotify Status: {spotifyToken ? 'Connected' : 'Disconnected'}</p>
           {!spotifyToken && (
             <button style={buttonStyle} onClick={loginSpotify}>Connect Spotify</button>
@@ -256,9 +264,10 @@ const App: React.FC = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
 
-        <div style={{ flex: 1 }}>
+        <section>
+
           <p>YouTube Status: {youtubeToken ? 'Connected' : 'Disconnected'}</p>
           {!youtubeToken && (
             <button style={buttonStyle} onClick={loginYoutube}>Connect YouTube</button>
@@ -323,7 +332,8 @@ const App: React.FC = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
+
       </div>
     </div>
   )
